@@ -3,25 +3,99 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050b18;
+  --background-secondary: #0a1628;
+  --foreground: #f1f5f9;
+  --foreground-muted: #94a3b8;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #22d3ee;
+  --border: rgba(148, 163, 184, 0.12);
+  --card: rgba(10, 22, 40, 0.85);
+  --card-hover: rgba(15, 30, 55, 0.95);
+  --glow-blue: rgba(59, 130, 246, 0.15);
+  --glow-cyan: rgba(34, 211, 238, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: var(--font-cairo), var(--font-inter), system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(59, 130, 246, 0.35);
+    color: #fff;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .gradient-hero {
+    background: radial-gradient(
+        ellipse 80% 60% at 50% 0%,
+        var(--glow-blue) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 80% 20%,
+        var(--glow-cyan) 0%,
+        transparent 50%
+      ),
+      linear-gradient(180deg, var(--background) 0%, var(--background-secondary) 100%);
+  }
+
+  .glass-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
