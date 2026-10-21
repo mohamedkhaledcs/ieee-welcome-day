@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -38,12 +39,20 @@ interface ProgressContextValue {
 const ProgressContext = createContext<ProgressContextValue | null>(null);
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
-  const [progress, setProgress] = useState<ProgressState>(createDefaultProgress);
+  const [progress, setProgress] = useState<ProgressState>(() => {
+    if (typeof window !== "undefined") {
+      return loadProgress();
+    }
+    return createDefaultProgress();
+  });
   const [hydrated, setHydrated] = useState(false);
+  const progressRef = useRef<ProgressState>(progress);
+  progressRef.current = progress;
 
   useEffect(() => {
     const loaded = loadProgress();
     setProgress(loaded);
+    progressRef.current = loaded;
     sounds.setEnabled(loaded.soundEnabled);
     setHydrated(true);
   }, []);
@@ -55,78 +64,84 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   const consumeAttempt = useCallback(
     (gameId: GameId): boolean => {
-      let result = false;
-      setProgress((prev) => {
-        const { nextState, consumed } = consumeAttemptStorage(prev, gameId);
-        result = consumed;
-        return nextState;
-      });
-      return result;
+      const current = progressRef.current;
+      const { nextState, consumed } = consumeAttemptStorage(current, gameId);
+      if (consumed) {
+        progressRef.current = nextState;
+        setProgress(nextState);
+      }
+      return consumed;
     },
     []
   );
 
   const updateGame = useCallback(
     (gameId: GameId, update: Partial<GameProgress>) => {
-      setProgress((prev) => updateGameProgress(prev, gameId, update));
+      const current = progressRef.current;
+      const nextState = updateGameProgress(current, gameId, update);
+      progressRef.current = nextState;
+      setProgress(nextState);
     },
     []
   );
 
   const setPoints = useCallback((points: number) => {
-    setProgress((prev) => {
-      const next = { ...prev, points };
-      saveProgress(next);
-      return next;
-    });
+    const next = { ...progressRef.current, points };
+    progressRef.current = next;
+    saveProgress(next);
+    setProgress(next);
   }, []);
 
   const addPoints = useCallback((amount: number) => {
-    setProgress((prev) => {
-      const next = { ...prev, points: prev.points + amount };
-      saveProgress(next);
-      return next;
-    });
+    const next = {
+      ...progressRef.current,
+      points: progressRef.current.points + amount,
+    };
+    progressRef.current = next;
+    saveProgress(next);
+    setProgress(next);
   }, []);
 
   const addBadge = useCallback((badge: string) => {
-    setProgress((prev) => {
-      if (prev.badges.includes(badge)) return prev;
-      const next = { ...prev, badges: [...prev.badges, badge] };
-      saveProgress(next);
-      return next;
-    });
+    if (progressRef.current.badges.includes(badge)) return;
+    const next = {
+      ...progressRef.current,
+      badges: [...progressRef.current.badges, badge],
+    };
+    progressRef.current = next;
+    saveProgress(next);
+    setProgress(next);
   }, []);
 
   const addReward = useCallback((reward: string) => {
-    setProgress((prev) => {
-      if (prev.rewards.includes(reward)) return prev;
-      const next = { ...prev, rewards: [...prev.rewards, reward] };
-      saveProgress(next);
-      return next;
-    });
+    if (progressRef.current.rewards.includes(reward)) return;
+    const next = {
+      ...progressRef.current,
+      rewards: [...progressRef.current.rewards, reward],
+    };
+    progressRef.current = next;
+    saveProgress(next);
+    setProgress(next);
   }, []);
 
   const setSoundEnabled = useCallback((enabled: boolean) => {
     sounds.setEnabled(enabled);
-    setProgress((prev) => {
-      const next = { ...prev, soundEnabled: enabled };
-      saveProgress(next);
-      return next;
-    });
+    const next = { ...progressRef.current, soundEnabled: enabled };
+    progressRef.current = next;
+    saveProgress(next);
+    setProgress(next);
   }, []);
 
   const toggleSound = useCallback(() => {
-    setProgress((prev) => {
-      const nextEnabled = !prev.soundEnabled;
-      sounds.setEnabled(nextEnabled);
-      if (nextEnabled) {
-        sounds.playClick();
-      }
-      const next = { ...prev, soundEnabled: nextEnabled };
-      saveProgress(next);
-      return next;
-    });
+    const nextEnabled = !progressRef.current.soundEnabled;
+    sounds.setEnabled(nextEnabled);
+    if (nextEnabled) {
+      sounds.playClick();
+    }
+    const next = { ...progressRef.current, soundEnabled: nextEnabled };
+    progressRef.current = next;
+    saveProgress(next);
+    setProgress(next);
   }, []);
 
   const value = useMemo<ProgressContextValue>(

@@ -171,11 +171,17 @@ export function FlipGame() {
           }, 600);
         }
       } else {
-        // MISMATCH: Show cards for 900ms then flip back smoothly
+        // MISMATCH: Every wrong answer / failed attempt immediately removes 1 heart
+        consumeAttempt("flip");
+        sounds.playWrong();
+
         setTimeout(() => {
           sounds.playTick();
           setFlippedIds([]);
           setIsProcessing(false);
+          if (attemptsRemaining - 1 <= 0) {
+            updateGame("flip", { lastResult: "lose" });
+          }
         }, 900);
       }
     }

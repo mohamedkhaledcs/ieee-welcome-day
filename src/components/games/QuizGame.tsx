@@ -88,7 +88,7 @@ export function QuizGame() {
   const currentQ = questions[currentIndex];
 
   const handleSelectOption = (index: number) => {
-    if (isAnswered || !currentQ) return;
+    if (isAnswered || !currentQ || attemptsRemaining <= 0) return;
 
     setSelectedOption(index);
     setIsAnswered(true);
@@ -100,10 +100,23 @@ export function QuizGame() {
       setScore((s) => s + 1);
     } else {
       sounds.playWrong();
+      // Every wrong answer immediately removes exactly 1 heart
+      consumeAttempt("quiz");
+      const remainingAfter = attemptsRemaining - 1;
+      if (remainingAfter <= 0) {
+        updateGame("quiz", { lastResult: "lose", bestScore: score });
+        setTimeout(() => {
+          setQuizFinished(true);
+        }, 1000);
+      }
     }
   };
 
   const handleNextQuestion = () => {
+    if (attemptsRemaining <= 0) {
+      setQuizFinished(true);
+      return;
+    }
     if (currentIndex + 1 < questions.length) {
       sounds.playClick();
       setCurrentIndex((prev) => prev + 1);
@@ -125,8 +138,7 @@ export function QuizGame() {
       addPoints(finalScore * 20);
       setShowSuccess(true);
     } else {
-      // Consume 1 attempt upon failing passing score
-      consumeAttempt("quiz");
+      // Round failed without reaching passing score
       updateGame("quiz", { lastResult: "lose", bestScore: finalScore });
       sounds.playWrong();
     }

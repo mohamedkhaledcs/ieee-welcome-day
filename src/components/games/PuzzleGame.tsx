@@ -110,8 +110,12 @@ export function PuzzleGame() {
   const handleGiveUpOrReset = () => {
     if (isWon || attemptsRemaining <= 0) return;
     // Deduct 1 attempt if user gives up / resets game
-    consumeAttempt("puzzle");
+    const consumed = consumeAttempt("puzzle");
+    if (!consumed) return;
     sounds.playWrong();
+    if (attemptsRemaining - 1 <= 0) {
+      updateGame("puzzle", { lastResult: "lose" });
+    }
     startNewPuzzle();
   };
 

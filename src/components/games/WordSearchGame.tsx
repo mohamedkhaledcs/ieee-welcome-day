@@ -259,6 +259,13 @@ export function WordSearchGame() {
             setShowSuccess(true);
           }, 600);
         }
+      } else if (selectedCells.length >= 2) {
+        // Failed attempt / wrong word selection: immediately remove 1 heart
+        consumeAttempt("wordsearch");
+        sounds.playWrong();
+        if (attemptsRemaining - 1 <= 0) {
+          updateGame("wordsearch", { lastResult: "lose" });
+        }
       }
     }
 

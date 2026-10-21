@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { MAX_ATTEMPTS } from "@/lib/constants";
 import { useLanguage } from "@/lib/i18n/context";
@@ -39,27 +39,34 @@ export function Hearts({
         {Array.from({ length: total }).map((_, i) => {
           const filled = i < clampedRemaining;
           return (
-            <AnimatePresence key={i} mode="wait">
-              <motion.div
-                initial={false}
-                animate={
+            <motion.div
+              key={i}
+              initial={false}
+              animate={
+                filled
+                  ? {
+                      scale: [1, 1.18, 1],
+                      filter: "drop-shadow(0 0 8px rgba(239, 68, 68, 0.7))",
+                      opacity: 1,
+                    }
+                  : {
+                      scale: [1.15, 0.85, 0.95],
+                      filter: "none",
+                      opacity: 0.3,
+                    }
+              }
+              transition={{ duration: 0.35 }}
+            >
+              <Heart
+                className={clsx(
+                  sizeMap[size],
+                  "transition-all duration-300",
                   filled
-                    ? { scale: [1, 1.15, 1], filter: "drop-shadow(0 0 6px rgba(239, 68, 68, 0.6))" }
-                    : { scale: 0.9, filter: "none", opacity: 0.4 }
-                }
-                transition={{ duration: 0.3 }}
-              >
-                <Heart
-                  className={clsx(
-                    sizeMap[size],
-                    "transition-colors duration-300",
-                    filled
-                      ? "fill-red-500 text-red-500"
-                      : "fill-none text-foreground-muted/30"
-                  )}
-                />
-              </motion.div>
-            </AnimatePresence>
+                    ? "fill-red-500 text-red-500"
+                    : "fill-none text-foreground-muted/30"
+                )}
+              />
+            </motion.div>
           );
         })}
       </div>
