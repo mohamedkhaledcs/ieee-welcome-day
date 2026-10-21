@@ -173,7 +173,10 @@ export function PuzzleGame() {
           padding="md"
           className="relative w-full max-w-[360px] sm:max-w-[420px] aspect-square p-3 sm:p-4 border-accent-blue/30 shadow-glow"
         >
-          <div className="w-full h-full grid grid-cols-3 grid-rows-3 gap-1.5 sm:gap-2">
+          <div
+            dir="ltr"
+            className="w-full h-full grid grid-cols-3 grid-rows-3 gap-1.5 sm:gap-2 select-none"
+          >
             {pieces.map((pieceVal, slotIndex) => {
               const isSelected = selectedSlot === slotIndex;
               const isCorrect = pieceVal === slotIndex;

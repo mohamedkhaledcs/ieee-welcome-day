@@ -1,11 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
+  CheckCircle2,
   Code2,
   Cpu,
   Globe,
-  HelpCircle,
   RefreshCw,
   ShieldCheck,
   Sparkles,
@@ -26,41 +25,51 @@ interface CardItem {
   labelEn: string;
   icon: typeof Code2;
   color: string;
-  bgGlow: string;
+  borderColor: string;
+  glowColor: string;
+  bgGradient: string;
 }
 
 const CARD_PAIRS = [
   {
     pairId: "code",
-    labelAr: "البرمجة",
-    labelEn: "Coding",
+    labelAr: "Front-End",
+    labelEn: "Front-End",
     icon: Code2,
     color: "#38bdf8",
-    bgGlow: "rgba(56, 189, 248, 0.2)",
+    borderColor: "rgba(56, 189, 248, 0.6)",
+    glowColor: "rgba(56, 189, 248, 0.35)",
+    bgGradient: "from-sky-950/60 to-slate-900/90",
   },
   {
     pairId: "security",
-    labelAr: "الأمن السيبراني",
+    labelAr: "Cyber Security",
     labelEn: "Cyber Security",
     icon: ShieldCheck,
     color: "#34d399",
-    bgGlow: "rgba(52, 211, 153, 0.2)",
+    borderColor: "rgba(52, 211, 153, 0.6)",
+    glowColor: "rgba(52, 211, 153, 0.35)",
+    bgGradient: "from-emerald-950/60 to-slate-900/90",
   },
   {
     pairId: "hardware",
-    labelAr: "المعالجات والعتاد",
-    labelEn: "Hardware",
+    labelAr: "Embedded & Hardware",
+    labelEn: "Hardware & IoT",
     icon: Cpu,
     color: "#fbbf24",
-    bgGlow: "rgba(251, 191, 36, 0.2)",
+    borderColor: "rgba(251, 191, 36, 0.6)",
+    glowColor: "rgba(251, 191, 36, 0.35)",
+    bgGradient: "from-amber-950/60 to-slate-900/90",
   },
   {
     pairId: "network",
-    labelAr: "الويب والشبكات",
-    labelEn: "Web & Network",
+    labelAr: "Web & Networks",
+    labelEn: "Web & Networks",
     icon: Globe,
-    color: "#a855f7",
-    bgGlow: "rgba(168, 85, 247, 0.2)",
+    color: "#c084fc",
+    borderColor: "rgba(192, 132, 252, 0.6)",
+    glowColor: "rgba(192, 132, 252, 0.35)",
+    bgGradient: "from-purple-950/60 to-slate-900/90",
   },
 ];
 
@@ -69,12 +78,12 @@ function generateShuffledCards(): CardItem[] {
   let idCounter = 1;
 
   CARD_PAIRS.forEach((pair) => {
-    // Add two instances for the pair (total 8 cards)
+    // Two cards per pair (8 cards total)
     cards.push({ id: idCounter++, ...pair });
     cards.push({ id: idCounter++, ...pair });
   });
 
-  // Fisher-Yates shuffle
+  // Fisher-Yates Shuffle
   for (let i = cards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [cards[i], cards[j]] = [cards[j], cards[i]];
@@ -103,7 +112,7 @@ export function FlipGame() {
   const [moves, setMoves] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Initialize game
+  // Initialize new game session
   const startNewGame = useCallback(() => {
     setCards(generateShuffledCards());
     setFlippedIds([]);
@@ -118,7 +127,11 @@ export function FlipGame() {
   }, [startNewGame]);
 
   const handleCardClick = (card: CardItem) => {
-    // Prevent clicking during comparison, already flipped, already matched, or game locked
+    // Strictly prevent invalid clicks:
+    // - during mismatch delay
+    // - card already flipped
+    // - card already matched
+    // - attempts exhausted
     if (
       isProcessing ||
       flippedIds.includes(card.id) ||
@@ -148,7 +161,7 @@ export function FlipGame() {
         setFlippedIds([]);
         setIsProcessing(false);
 
-        // Check if all 4 pairs matched
+        // Check if all 4 pairs are matched
         if (nextMatched.length === CARD_PAIRS.length) {
           updateGame("flip", { completed: true, lastResult: "win" });
           addBadge("قوة الذاكرة");
@@ -158,7 +171,7 @@ export function FlipGame() {
           }, 600);
         }
       } else {
-        // MISMATCH: wait 900ms then flip back
+        // MISMATCH: Show cards for 900ms then flip back smoothly
         setTimeout(() => {
           sounds.playTick();
           setFlippedIds([]);
@@ -184,8 +197,8 @@ export function FlipGame() {
       />
 
       <div className="flex flex-col items-center">
-        {/* Game Stats */}
-        <div className="w-full flex items-center justify-between gap-4 mb-4 text-xs sm:text-sm font-semibold text-foreground-muted">
+        {/* Game Stats Bar */}
+        <div className="w-full flex items-center justify-between gap-4 mb-5 text-xs sm:text-sm font-semibold text-foreground-muted">
           <div className="flex items-center gap-1.5 text-accent-cyan">
             <Sparkles className="h-4 w-4" />
             <span>
@@ -198,8 +211,11 @@ export function FlipGame() {
           </div>
         </div>
 
-        {/* 8 Cards Grid (4 columns x 2 rows on tablet/desktop, 2 columns x 4 rows or 4x2 on mobile) */}
-        <div className="w-full grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-md sm:max-w-xl">
+        {/* 8 Cards Grid: 4 columns x 2 rows (tablet/desktop) & 2x4 on small phones */}
+        <div
+          dir="ltr"
+          className="w-full grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 max-w-md sm:max-w-xl select-none"
+        >
           {cards.map((card) => {
             const isFlipped =
               flippedIds.includes(card.id) || matchedPairs.includes(card.pairId);
@@ -209,16 +225,21 @@ export function FlipGame() {
             return (
               <div
                 key={card.id}
-                className="aspect-square perspective-1000"
+                className="aspect-[3/3.6] sm:aspect-square"
+                style={{ perspective: "1000px" }}
               >
-                <motion.button
+                <div
+                  role="button"
+                  tabIndex={isMatched || isProcessing ? -1 : 0}
                   onClick={() => handleCardClick(card)}
-                  disabled={isMatched || isProcessing || attemptsRemaining <= 0}
-                  whileTap={{ scale: 0.95 }}
-                  className={`w-full h-full rounded-2xl border transition-all duration-300 relative transform-style-3d cursor-pointer ${
-                    isFlipped
-                      ? "rotate-y-180"
-                      : "border-border bg-card hover:border-accent-blue/50 hover:shadow-glow"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleCardClick(card);
+                    }
+                  }}
+                  className={`w-full h-full relative cursor-pointer outline-none transition-transform duration-500 rounded-2xl ${
+                    isMatched ? "cursor-default" : "hover:scale-[1.02]"
                   }`}
                   style={{
                     transformStyle: "preserve-3d",
@@ -229,58 +250,79 @@ export function FlipGame() {
                       ? lang === "ar"
                         ? card.labelAr
                         : card.labelEn
-                      : "Card back"
+                      : "Card hidden"
                   }
                 >
-                  {/* Card Back (Hidden state) */}
+                  {/* Card Back Face (Hidden Face) */}
                   <div
-                    className="absolute inset-0 w-full h-full rounded-2xl flex flex-col items-center justify-center p-3 backface-hidden bg-gradient-to-b from-[#0a1628] to-[#050b18] border border-border"
-                    style={{ backfaceVisibility: "hidden" }}
+                    className="absolute inset-0 w-full h-full rounded-2xl p-3 flex flex-col items-center justify-center border border-border bg-gradient-to-b from-[#0a1628] to-[#040914] shadow-card transition-all duration-200"
+                    style={{
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                      transform: "rotateY(0deg)",
+                    }}
                   >
-                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-accent-blue/10 border border-accent-blue/20 flex items-center justify-center text-accent-blue">
-                      <HelpCircle className="h-6 w-6" />
+                    {/* Glowing circuit ring */}
+                    <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-accent-blue/10 border border-accent-blue/30 flex items-center justify-center text-accent-cyan shadow-[0_0_15px_rgba(59,130,246,0.2)] mb-2">
+                      <span className="text-xl sm:text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-accent-cyan to-accent-blue">
+                        ⚡
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold text-foreground-muted/60 mt-1 uppercase tracking-widest">
-                      IEEE
+                    <span className="text-[10px] sm:text-xs font-extrabold tracking-widest uppercase text-foreground-muted/70">
+                      IEEE OCS
                     </span>
                   </div>
 
-                  {/* Card Front (Revealed state) */}
+                  {/* Card Front Face (Revealed Face) */}
                   <div
-                    className={`absolute inset-0 w-full h-full rounded-2xl flex flex-col items-center justify-center p-3 backface-hidden border ${
+                    className={`absolute inset-0 w-full h-full rounded-2xl p-3 flex flex-col items-center justify-center border bg-gradient-to-b ${card.bgGradient} transition-all duration-300 ${
                       isMatched
-                        ? "border-green-500/60 bg-green-950/20 shadow-[0_0_15px_rgba(34,197,94,0.3)]"
-                        : "border-accent-cyan/60 bg-[#071324] shadow-[0_0_12px_rgba(34,211,238,0.25)]"
+                        ? "border-green-500/80 shadow-[0_0_20px_rgba(34,197,94,0.4)]"
+                        : "border-accent-cyan/70 shadow-[0_0_15px_rgba(34,211,238,0.3)]"
                     }`}
                     style={{
                       backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
                       transform: "rotateY(180deg)",
                     }}
                   >
+                    {/* Icon container */}
                     <div
-                      className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex items-center justify-center mb-1 shadow-inner"
-                      style={{ backgroundColor: card.bgGlow }}
+                      className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex items-center justify-center mb-2 shadow-inner"
+                      style={{
+                        backgroundColor: card.glowColor,
+                        border: `1px solid ${card.borderColor}`,
+                      }}
                     >
                       <Icon
                         className="h-7 w-7 sm:h-8 sm:w-8"
                         style={{ color: card.color }}
                       />
                     </div>
+
+                    {/* Track Title */}
                     <span
-                      className="text-xs sm:text-sm font-bold text-center leading-tight"
+                      className="text-xs sm:text-sm font-bold text-center leading-tight tracking-wide"
                       style={{ color: card.color }}
                     >
                       {lang === "ar" ? card.labelAr : card.labelEn}
                     </span>
+
+                    {/* Matched check badge */}
+                    {isMatched && (
+                      <span className="absolute top-2 end-2 text-green-400">
+                        <CheckCircle2 className="h-4 w-4" />
+                      </span>
+                    )}
                   </div>
-                </motion.button>
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Reset button */}
-        <div className="mt-6 text-center">
+        {/* Reset / Retry Button */}
+        <div className="mt-7 text-center">
           <Button
             onClick={handleReset}
             disabled={matchedPairs.length === CARD_PAIRS.length || attemptsRemaining <= 0}

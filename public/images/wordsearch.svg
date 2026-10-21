@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0c2044" />
+      <stop offset="60%" stop-color="#050b18" />
+      <stop offset="100%" stop-color="#02050c" />
+    </radialGradient>
+    <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.6" />
+    </linearGradient>
+    <filter id="neonBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="strongGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur1" />
+      <feGaussianBlur stdDeviation="4" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur1" />
+        <feMergeNode in="blur2" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bgGrad)" />
+
+  <!-- Stars / Digital particles -->
+  <g fill="#38bdf8" opacity="0.4">
+    <circle cx="120" cy="80" r="1.5" />
+    <circle cx="280" cy="140" r="2" />
+    <circle cx="950" cy="90" r="1.8" />
+    <circle cx="1080" cy="220" r="2.2" />
+    <circle cx="150" cy="520" r="1.8" />
+    <circle cx="1020" cy="580" r="2" />
+    <circle cx="600" cy="70" r="1.5" />
+  </g>
+
+  <!-- Cybernetic Grid Perspective Lines -->
+  <g stroke="rgba(34, 211, 238, 0.15)" stroke-width="1.2">
+    <line x1="200" y1="120" x2="1000" y2="120" />
+    <line x1="200" y1="200" x2="1000" y2="200" />
+    <line x1="200" y1="280" x2="1000" y2="280" />
+    <line x1="200" y1="360" x2="1000" y2="360" />
+    <line x1="200" y1="440" x2="1000" y2="440" />
+    <line x1="200" y1="520" x2="1000" y2="520" />
+
+    <line x1="260" y1="80" x2="260" y2="560" />
+    <line x1="380" y1="80" x2="380" y2="560" />
+    <line x1="500" y1="80" x2="500" y2="560" />
+    <line x1="620" y1="80" x2="620" y2="560" />
+    <line x1="740" y1="80" x2="740" y2="560" />
+    <line x1="860" y1="80" x2="860" y2="560" />
+    <line x1="980" y1="80" x2="980" y2="560" />
+  </g>
+
+  <!-- Highlight Beam for Word "IEEE" -->
+  <rect x="230" y="170" width="460" height="60" rx="30" fill="rgba(34, 211, 238, 0.12)" stroke="#22d3ee" stroke-width="2.5" filter="url(#strongGlow)" />
+
+  <!-- Highlight Beam for Word "OBOUR" (Diagonal) -->
+  <line x1="390" y1="290" x2="750" y2="530" stroke="#38bdf8" stroke-width="24" stroke-linecap="round" opacity="0.2" filter="url(#strongGlow)" />
+  <line x1="390" y1="290" x2="750" y2="530" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" opacity="0.8" />
+
+  <!-- Holographic Letters in Grid -->
+  <g font-family="monospace, sans-serif" font-weight="900" font-size="34" text-anchor="middle" dominant-baseline="central">
+    <!-- Row 1 -->
+    <text x="260" y="200" fill="#22d3ee" filter="url(#neonBlur)">I</text>
+    <text x="380" y="200" fill="#22d3ee" filter="url(#neonBlur)">E</text>
+    <text x="500" y="200" fill="#22d3ee" filter="url(#neonBlur)">E</text>
+    <text x="620" y="200" fill="#22d3ee" filter="url(#neonBlur)">E</text>
+    <text x="740" y="200" fill="#64748b" opacity="0.6">X</text>
+    <text x="860" y="200" fill="#64748b" opacity="0.6">Q</text>
+
+    <!-- Row 2 -->
+    <text x="260" y="280" fill="#64748b" opacity="0.6">A</text>
+    <text x="380" y="280" fill="#38bdf8" filter="url(#neonBlur)">O</text>
+    <text x="500" y="280" fill="#64748b" opacity="0.6">T</text>
+    <text x="620" y="280" fill="#64748b" opacity="0.6">N</text>
+    <text x="740" y="280" fill="#64748b" opacity="0.6">P</text>
+    <text x="860" y="280" fill="#64748b" opacity="0.6">V</text>
+
+    <!-- Row 3 -->
+    <text x="260" y="360" fill="#64748b" opacity="0.6">M</text>
+    <text x="380" y="360" fill="#64748b" opacity="0.6">L</text>
+    <text x="500" y="360" fill="#38bdf8" filter="url(#neonBlur)">B</text>
+    <text x="620" y="360" fill="#64748b" opacity="0.6">G</text>
+    <text x="740" y="360" fill="#64748b" opacity="0.6">K</text>
+    <text x="860" y="360" fill="#64748b" opacity="0.6">W</text>
+
+    <!-- Row 4 -->
+    <text x="260" y="440" fill="#64748b" opacity="0.6">Z</text>
+    <text x="380" y="440" fill="#64748b" opacity="0.6">D</text>
+    <text x="500" y="440" fill="#64748b" opacity="0.6">Y</text>
+    <text x="620" y="440" fill="#38bdf8" filter="url(#neonBlur)">O</text>
+    <text x="740" y="440" fill="#64748b" opacity="0.6">F</text>
+    <text x="860" y="440" fill="#64748b" opacity="0.6">S</text>
+
+    <!-- Row 5 -->
+    <text x="260" y="520" fill="#64748b" opacity="0.6">C</text>
+    <text x="380" y="520" fill="#64748b" opacity="0.6">H</text>
+    <text x="500" y="520" fill="#64748b" opacity="0.6">R</text>
+    <text x="620" y="520" fill="#64748b" opacity="0.6">J</text>
+    <text x="740" y="520" fill="#38bdf8" filter="url(#neonBlur)">U</text>
+    <text x="860" y="520" fill="#38bdf8" filter="url(#neonBlur)">R</text>
+  </g>
+
+  <!-- Cyber Frame Accents -->
+  <path d="M 180 140 L 180 80 L 240 80" stroke="#22d3ee" stroke-width="3" fill="none" />
+  <path d="M 1020 140 L 1020 80 L 960 80" stroke="#22d3ee" stroke-width="3" fill="none" />
+  <path d="M 180 500 L 180 560 L 240 560" stroke="#22d3ee" stroke-width="3" fill="none" />
+  <path d="M 1020 500 L 1020 560 L 960 560" stroke="#22d3ee" stroke-width="3" fill="none" />
+
+  <!-- Center Floating Tech HUD Circle -->
+  <circle cx="600" cy="340" r="280" stroke="rgba(34, 211, 238, 0.2)" stroke-width="2" stroke-dasharray="12 8" fill="none" />
+  <circle cx="600" cy="340" r="320" stroke="rgba(59, 130, 246, 0.15)" stroke-width="1.5" stroke-dasharray="6 14" fill="none" />
+</svg>

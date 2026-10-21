@@ -317,11 +317,12 @@ export function WordSearchGame() {
         >
           <div
             ref={boardRef}
+            dir="ltr"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
-            className="w-full h-full grid grid-cols-10 grid-rows-10 gap-0.5 sm:gap-1 touch-none"
+            className="w-full h-full grid grid-cols-10 grid-rows-10 gap-0.5 sm:gap-1 touch-none select-none"
             style={{ touchAction: "none" }}
           >
             {boardData.grid.map((row, r) =>

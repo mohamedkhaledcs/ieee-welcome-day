@@ -34,12 +34,14 @@ const challengeMetas: Record<GameId, ChallengeMeta> = {
   wheel: {
     id: "wheel",
     icon: CircleDot,
+    image: "/images/wheel.jpg",
     gradient: "from-blue-600/30 via-cyan-500/20 to-blue-900/40",
     badge: "🎡 8 مكافآت",
   },
   quiz: {
     id: "quiz",
     icon: HelpCircle,
+    image: "/images/quiz.jpg",
     gradient: "from-indigo-600/30 via-purple-500/20 to-blue-900/40",
     badge: "🧠 90+ سؤال",
   },
@@ -53,12 +55,14 @@ const challengeMetas: Record<GameId, ChallengeMeta> = {
   flip: {
     id: "flip",
     icon: Grid3X3,
+    image: "/images/flip.jpg",
     gradient: "from-sky-600/30 via-teal-500/20 to-indigo-900/40",
     badge: "🃏 4 أزواج",
   },
   wordsearch: {
     id: "wordsearch",
     icon: Search,
+    image: "/images/wordsearch.svg",
     gradient: "from-blue-700/30 via-cyan-600/20 to-slate-900/40",
     badge: "🔍 6 كلمات",
   },
